@@ -2,6 +2,7 @@ package com.assertsolutions.routes;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,12 +33,15 @@ public class KarafMainRoute extends RouteBuilder {
     @Override
     public void configure() throws Exception {
         camelContext.setUseMDCLogging(Boolean.TRUE);        
-        
+        KafkaComponent kafka = new KafkaComponent();
+		kafka.setBrokers(env.getProperty("kafka.url"));
+		camelContext.addComponent("kafka", kafka);
         log.info("Start rote: kafka server...........");
 
         from("kafka:TestLog?"
-        		+ "brokers="+env.getProperty("kafka.url")
-                + "&maxPollRecords=5000"
+        		//+ "brokers="+env.getProperty("kafka.url")
+                //+ "&"
+                + "maxPollRecords=5000"
                 + "&consumersCount=1"
                 + "&seekTo=beginning"
                 + "&autoCommitEnable=true"
