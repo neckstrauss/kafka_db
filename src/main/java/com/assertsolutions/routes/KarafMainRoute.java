@@ -34,11 +34,12 @@ public class KarafMainRoute extends RouteBuilder {
     public void configure() throws Exception {
         camelContext.setUseMDCLogging(Boolean.TRUE);        
         KafkaComponent kafka = new KafkaComponent();
-		kafka.setBrokers(env.getProperty("kafka.url"));
+		kafka.setBrokers("{{kafka.host}}:{{kafka.port}}");
 		camelContext.addComponent("kafka", kafka);
         log.info("Start rote: kafka server...........");
 
-        from("kafka:TestLog?"
+        from("kafka:{{kafka.topic}}"
+        		+ "?"
         		//+ "brokers="+env.getProperty("kafka.url")
                 //+ "&"
                 + "maxPollRecords=5000"
@@ -47,7 +48,8 @@ public class KarafMainRoute extends RouteBuilder {
                 + "&autoCommitEnable=true"
                 + "&synchronous=true"
                 + "&groupId=kafkaGroup"
-                + "&seekTo=end")
+                + "&seekTo=end"
+        		)
                 .routeId("FromKafka")
                 .log("Termina consumir kafka .... ${body}")
                 .unmarshal().json(JsonLibrary.Jackson, AuditoriaRequest.class)                
