@@ -54,9 +54,7 @@ public class KarafMainRoute extends RouteBuilder {
                 .log("Termina consumir kafka .... ${body}")
                 .unmarshal().json(JsonLibrary.Jackson, AuditoriaRequest.class)                
                 .bean("utilBean","setCurrentDate")
-                .to("sql:INSERT INTO Seguridad.dbo.Auditoria_Log_Notificador2 " + 
-                		"(CLIENTE, FECHA_LOG, USUARIO_CREACION, NIVEL_LOG, TIPO_EVENTO, DESCRIPCION_EVENTO, CONTENIDO_LOG, IP_ORIGEN, ID_EXCHANGE, APLICACION, OPERACION) " + 
-                		"VALUES(:#${body.cliente}, :#${body.fechaLog}, :#${body.usuarioCreacion}, :#${body.nivelLog}, :#${body.tipoEvento}, :#${body.descripcion}, :#${body.contenidoLog}, :#${body.ipOrigen}, :#${body.idExchange}, :#${body.aplicacion}, :#${body.operacion});" + 
+                .to("sql:{{sql.insert.auditoria}}" + 
                 		"?" +
                         "dataSource=dataSource")
                 .end();
