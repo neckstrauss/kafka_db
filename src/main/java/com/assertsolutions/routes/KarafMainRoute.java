@@ -21,14 +21,9 @@ public class KarafMainRoute extends RouteBuilder {
     
     @Value("${camel.component.servlet.mapping.context-path}")
     private String contextPath;
-
     
     @Autowired
     private CamelContext camelContext;
-
-    @Autowired
-    private Environment env;
-
 
     @Override
     public void configure() throws Exception {
